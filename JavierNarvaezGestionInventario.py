@@ -3,7 +3,7 @@
 """{"productName":"name",
      "productPrice":intValue,
      "productQty":floatValue}"""
-inventory = []
+inventory = [{"productName":"queso","productPrice":100,"productQty":12},{"productName":"palo","productPrice":100,"productQty":12},{"productName":"agua","productPrice":100,"productQty":12}]
 answersToRestart = ("si", "s", "no", "n")
 #print(inventory[1]["productPrice"])
 
@@ -13,6 +13,7 @@ def decorationFunction():
 
 
 ###############-/input functions and validations/-###############
+#####--\adding product\--#####
 def inputProductName():
     decorationFunction()
     temporaryName = input("- Ingresa el nombre del producto: \n     ")
@@ -77,6 +78,15 @@ def validationMinProducts(dictionary):
     else:
         return False
 
+#####--\consulting product\--#####
+
+def consultProductOnly(list, nameToConsult):
+    for i in list:
+        if i["productName"] == nameToConsult:
+            return i
+    return None
+
+
 ###############-/sequence functions/-###############
 
 def restartProcess(actualProcess):
@@ -113,6 +123,24 @@ def addProductMenu():
         print(f"\nSe requieren minimo (5) productos para realizar cualquier otra funcion \nte faltan: ({5-len(inventory)})")
         return addProductMenu()
     return restartProcess(addProductMenu)
-        
+
+def consulProductMenu():
+    decorationFunction()
+    print("--"*5,f"CONSULTAS DE INVENTARIO","--"*5)
+    productNametoConsult = inputProductName()
+    if consultProductOnly(inventory, productNametoConsult) == None:
+        decorationFunction()
+        print(f"\nERROR: nombre ingresado del producto no existe intente con otro nombre diferente a ({productNametoConsult}).\n")
+        return restartProcess(consulProductMenu)
+    consultedProduct = consultProductOnly(inventory, productNametoConsult)
+    decorationFunction()
+    print(consultedProduct["productName"])
+    print("\nProducto consultado con exito!")
+    print(f" - Nombre: {consultedProduct["productName"]}")
+    print(f" - Precio: {consultedProduct["productPrice"]}$")
+    print(f" - Cantidad: {consultedProduct["productQty"]}")
+    return restartProcess(consulProductMenu)
+
 addProductMenu()
 print("la cantidad: ",len(inventory))
+consulProductMenu()
