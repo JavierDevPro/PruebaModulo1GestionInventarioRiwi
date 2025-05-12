@@ -265,7 +265,7 @@ def deleteProductMenu():
 def totalCalculationMenu():
     decorationFunction()
     print("--"*5,f"SUMATORIA DEL COSTO TOTAL DEL INVENTARIO","--"*5)
-    totalPrices = calculationTotalPrices(inventory)
+    totalPrices = round(calculationTotalPrices(inventory),2)
     print(f"\nEl valor de compra de todos los PRODUCTOS del inventario.\n\nEs de: {totalPrices}$")
     restartProcess(totalCalculationMenu)
 
