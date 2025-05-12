@@ -3,7 +3,7 @@
 """{"productName":"name",
      "productPrice":intValue,
      "productQty":floatValue}"""
-inventory = [{"productName":"queso","productPrice":100,"productQty":12},{"productName":"palo","productPrice":100,"productQty":12},{"productName":"agua","productPrice":100,"productQty":12}]
+inventory = []
 answersToRestart = ("si", "s", "no", "n")
 answersOptionMenu =[
     "1", "2", "3", "4", "5", "6", "7",
@@ -13,7 +13,8 @@ answersOptionMenu =[
 #print(inventory[1]["productPrice"])
 
 ###############-/input functions and validations/-###############
-#####--\adding product\--#####
+#the next area is divided by the diferent process that are required to bring a solution for the problem
+#####--\adding product\--##### there are the functions that gives values for the principals data requiered to create a product
 def inputProductName():
     decorationFunction()
     temporaryName = input("- Ingresa el nombre del producto: \n     ")
@@ -72,14 +73,18 @@ def addProductToInventory(inventoryList, productName, productPrice, productQty):
     inventoryList.append({"productName":productName,"productPrice":productPrice,"productQty":productQty})
     return inventoryList
 
-def validationMinProducts(dictionary):
-    if len(dictionary) >= 5:
-        return True
-    else:
-        return False
+#####--\adding product validations\--#####
+# a lambda function that evaluate if there are the minimun value of products
+validationMinProducts = lambda dictionary: True if len(dictionary) >= 5 else False
+
+def validationProductAdded(list, productName):
+    for product in list:
+        if product["productName"] == productName:
+            return True
+        else:
+            return False
 
 #####--\consulting product\--#####
-
 def consultProductOnly(list, nameToConsult):
     for i in list:
         if i["productName"] == nameToConsult:
@@ -87,7 +92,6 @@ def consultProductOnly(list, nameToConsult):
     return None
 
 #####--\update product\--#####
-
 def updateProductPrice(list, productName, newProductPrice):
     indexCounter = 0
     for i in list:        
@@ -98,7 +102,6 @@ def updateProductPrice(list, productName, newProductPrice):
     return None
 
 #####--\delete product\--#####
-
 def deleteProduct(list, productName):    
     for i in list:        
         if i["productName"] == productName:
@@ -107,7 +110,6 @@ def deleteProduct(list, productName):
     return None
 
 #####--\calculations total products\--#####
-
 def calculationTotalPrices(list):
     multipliedPricesQtyList = []
     for product in list:
@@ -117,7 +119,7 @@ def calculationTotalPrices(list):
 
 
 ###############-/sequence functions/-###############
-
+#those functions gives direction to the sequence process
 def restartProcess(actualProcess):
     decorationFunction()    
     while True:
@@ -175,11 +177,11 @@ def askingForOptionMainMenu():
 def showOptionMainMenu():
         decorationFunction()
         print("--"*5,f"MENU DE OPCIONES","--"*5)
-        print(f"(1) - calcular total de la compra.")
+        print(f"(1) - ingresar productos.")
         print(f"(2) - consultar valores de un producto.")
         print(f"(3) - actualizar precios del producto.")
         print(f"(4) - eliminar producto.")
-        print(f"(5) - ingresar productos.")
+        print(f"(5) - calcular total de la compra.")
         print(f"(6) - listar productos.")
         print(f"(7) - salir.")
         return askingForOptionMainMenu()
@@ -189,16 +191,27 @@ def decorationFunction():
     print(f"==" * 40, "\n")
 
 ###############-/Menu system functions/-###############
+#there are one function for any process of the algoritm that reprecents the visual area for
 def addProductMenu():
     decorationFunction()
     print("--"*5,f"INGRESO DE INVENTARIO","--"*5)
+
     productName = inputProductName()
+
+    if validationProductAdded(inventory, productName):
+        decorationFunction()
+        print("ERROR: producto agregado con anterioridad.\nNO puedes agregar un producto que ya agregaste.")
+        return addProductMenu()
+
     productPrice = inputProductPrice()
     productQty = inputProductQty()
+
     addProductToInventory(inventory, productName, productPrice, productQty)
     if not validationMinProducts(inventory):
         print(f"\nSe requieren minimo (5) productos para realizar cualquier otra funcion \nte faltan: ({5-len(inventory)})")
         return addProductMenu()
+    
+    decorationFunction()
     print("\nMenu de opciones ya disponible (No) para acceder a el")
     return restartProcess(addProductMenu)
 
